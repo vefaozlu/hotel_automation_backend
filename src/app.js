@@ -27,7 +27,7 @@ const main = async () => {
     console.log(clc.green("Models initiliazed !"));
 
     app.listen(port, () => {
-      console.log(clc.greenBright(`App running on port ${port}`));
+      console.log(clc.greenBright(`App is running on port ${port}`));
     });
   } catch (e) {
     console.log(clc.red(e));
