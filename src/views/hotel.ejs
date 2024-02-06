@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/style.css">
+  </link>
+  <title><%= hotel.name%></title>
+</head>
+
+<body>
+
+  <div class="navbar">
+    <div class="logo">
+      <h3>Hotel</h3>
+    </div>
+    <a href="/admin/hotels">Hotels</a>
+  </div>
+
+  <div class="content">
+    <div class="left">
+      <div class="reservations-container">
+        <div class="reservations-header">
+          <a class="add-button" href="/admin/reservations/create/<%= hotel.id %>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" fill="#333"/>
+            </svg></a>
+          <h3 class="title">Reservations</h3>
+        </div>
+        <% reservations.forEach(function(reservation) { %>
+          <div class="reservation-card">
+            <a href="/admin/reservations/<%= reservation.id %>">
+              <div class="info-column">
+                <p><%= reservation.visitorEmail%></p>
+                <p><%= reservation.startDate%></p>
+                <p><%= reservation.endDate%></p>
+                <p><%= reservation.total%></p>
+              </div>
+            </a>
+          </div>
+        <% }); %>
+      </div>
+      <div class="reservations-container">
+        <div class="reservations-header">
+          <a class="add-button" href="/admin/roomtypes/create/<%= hotel.id %>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" fill="#333" />
+            </svg></a>
+          <h3 class="title">Rooms</h3>
+        </div>
+        <% roomTypes.forEach(function(roomType) { %>
+        <div class="reservation-card">
+          <a href="/admin/reservations/<%= roomType.id %>">
+            <div class="info-column">
+              <p><%= roomType.name %></p>
+              <p><%= roomType.price %> TL</p>
+            </div>
+          </a>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+
+    <div class="right">Statistcs and Graphs</div>
+  </div>
+
+  <div class="roomtypes-container"></div>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</html>

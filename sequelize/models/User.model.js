@@ -1,8 +1,9 @@
 import { DataTypes } from "sequelize";
-import sequelize from "config.js";
+import Reservation from "./Reservation.model.js";
+import sequelize from "../config.js";
 
-const Auth = sequelize.define(
-    "Auth",
+const User = sequelize.define(
+    "User",
     {
         id: {
             type: DataTypes.INTEGER,
@@ -19,17 +20,16 @@ const Auth = sequelize.define(
             type: DataTypes.STRING(20),
         },
         password: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.STRING(255),
         },
-        userId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        roleId: {
-            type: DataTypes.INTEGER,
+        role: {
+            type: DataTypes.ENUM("admin", "user"),
             allowNull: false,
         }
+    },
+    {
+        timestamps: false,
     }
 );
 
-export default Auth;
+export default User;

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      width: 400px;
+    }
+
+    .title {
+      width: 50%;
+      text-align: start;
+      font-weight: 600;
+    }
+
+    .value {
+      width: 50%;
+      text-align: start;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      width: 400px;
+      margin-top: 20px;
+    }
+
+    .actions button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .actions button:hover {
+      background-color: #e0e0e0;
+    }
+
+    .edit-section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 400px;
+      margin-top: 20px;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div>
+    <div class="row">
+      <p class="title">Username</p>
+      <p class="value">
+        <%= reservation.visitorEmail%>
+      </p>
+    </div>
+    <div class="row">
+      <p class="title">Reservation Start</p>
+      <p class="value">
+        <%= reservation.startDate%>
+      </p>
+    </div>
+    <div class="row">
+      <p class="title">Reservation End</p>
+      <p class="value">
+        <%= reservation.endDate%>
+      </p>
+    </div>
+    <div class="row">
+      <p class="title">Status</p>
+      <p id="status" class="value">
+        <%= reservation.status%>
+      </p>
+    </div>
+    <div class="actions">
+      <% if (reservation.status==="pending" ) { %>
+      <button onclick="acceptReservation('<%= reservation.id %>')">Activate Reservation</button>
+      <% } %>
+      <button onclick="cancelReservation('<%= reservation.id %>')">Cancel Reservation</button>
+      <button onclick="openForm()">Edit Reservation</button>
+    </div>
+    <div id="section" class="edit-section">
+      <label for="start">Start date:</label>
+      <input type="date" id="start" />
+      <label for="end">End date:</label>
+      <input type="date" id="end" />
+      <input type="submit" id="submit-date" />
+    </div>
+  </div>
+</body>
+
+<script>
+  async function acceptReservation(id) {
+    const body = {
+      status: "approved"
+    }
+
+    const response = await fetch(`/admin/reservations/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+    })
+
+    if (response.status !== 200) {
+      const data = await response.json();
+      alert(data.message);
+      return;
+    }
+
+    document.getElementById("status").innerHTML = "approved";
+    return;
+  }
+
+  async function cancelReservation(id) {
+    const body = {
+      status: "cancelled"
+    }
+
+    const response = await fetch(`/admin/reservations/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+    })
+
+    if (response.status !== 200) {
+      const data = await response.json();
+      alert(data.message);
+      return;
+    }
+
+    document.getElementById("status").innerHTML = "cancelled";
+    return;
+  }
+
+  async function openForm() {
+    document.getElementById("section").style.display = "flex";
+  }
+
+  async function updateReservationDates(id, roomId, startDate, endDate) {
+    const body = {
+      start_date: startDate,
+      end_date: endDate,
+      room_id: roomId
+    }
+
+    const response = await fetch(`/admin/reservations/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+    })
+
+    if (response.status !== 200) {
+      const data = await response.json();
+      alert(data.message);
+      return;
+    }
+
+    alert("Reservation updated successfully");
+    return;
+  }
+
+  document.getElementById("submit-date").addEventListener("click", () => {
+    const startDate = document.getElementById("start").value;
+    const endDate = document.getElementById("end").value;
+    updateReservationDates("<%= reservation.id%>", "<%= reservation.roomId %>", startDate, endDate);
+  });
+</script>
+
+</html>

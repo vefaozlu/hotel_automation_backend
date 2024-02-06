@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/style.css">
+  </link>
+  <title>Login</title>
+</head>
+
+<body>
+  <form id="register-form" class="register-container">
+      <h1>Register</h1>
+      <div id="message" class="alert"></div>
+      <input type="text" name="name" placeholder="Name">
+      <input type="email" name="email" placeholder="Email">
+      <input type="text" name="phonenumber" placeholder="Phone Number">
+      <input type="password" name="password" placeholder="Password">
+      <input type="password" name="confirm-password" placeholder="Confirm Password">
+      <input type="submit" name="submit" value="Submit">
+  </form>
+</body>
+
+<script>
+  const form = document.getElementById("register-form");
+  form.addEventListener('submit', async (e) => {
+    console.log("dadadad");
+    try {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const name = formData.get('name');
+      const email = formData.get('email');
+      const phoneNumber = formData.get('phonenumber');
+      const password = formData.get('password');
+      const confirmPassword = formData.get('confirm-password');
+      
+      const body = {
+      email: email,
+      username: name,
+      phone_number: phoneNumber,
+      password: password,
+      confirm_password: confirmPassword,
+      role_id: 0
+    };
+
+      const response = await fetch('/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      })
+
+      const data = await response.json();
+
+      if(response.status !== 200) {
+        document.getElementById('message').innerHTML = data.message;
+        return;
+      }
+      alert(data.user);
+      return;
+    } catch (error) {
+      console.log("sdadsa")
+      console.error('Error:', error);
+      document.getElementById('message').innerHTML = error;
+      return;
+    }
+  });
+</script>
+
+</html>

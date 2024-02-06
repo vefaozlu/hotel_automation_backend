@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/style.css">
+  </link>
+  <title>Login</title>
+</head>
+
+<body>
+
+  <form id="reservation-form" class="create-hotel">
+    <div id="message"></div>
+    <input type="date" name="start-date" placeholder="Start Date" />
+    <input type="date" name="end-date" placeholder="End Date" />
+    <input type="number" name="room-id" placeholder="Room Id" />
+    <input type="number" name="room-type-id" placeholder="Room Type" />
+    <input type="number" name="visitor-id" placeholder="Visitor Id" />
+    <input type="button" name="add" onclick="addRoomType('<%= hotelId %>')" />
+  </form>
+
+  <div id="list" class="roomtype-list"></div>
+
+  <a href="/admin/hotels">Done</a>
+
+</body>
+
+<script>
+  async function addRoomType(hotelId) {
+    console.log("hotelId", hotelId);
+    const form = document.getElementById("reservation-form");
+
+    try {
+      const formData = new FormData(form);
+      const startDate = formData.get('start-date');
+      const endDate = formData.get('end-date');
+      const roomId = formData.get('room-id');
+      const roomTypeId = formData.get('room-type-id');
+      const visitorId = formData.get('visitor-id');
+
+      const body = {
+        start_date: startDate,
+        end_date: endDate,
+        room_id: roomId,
+        room_type_id: roomTypeId,
+        hotel_id: hotelId,
+        visitor_id: visitorId,
+      };
+
+      const response = await fetch('/admin/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      })
+
+      const data = await response.json();
+
+      if (response.status !== 200) {
+        document.getElementById('message').innerHTML = data.message;
+        return;
+      }
+
+      document.getElementById("list").innerHTML += `<div class="reservation-card">
+          <div class="info-column">
+              <p>${data.name}</p>
+              <p>${data.price}</p>
+          </div>
+  </div>`;
+      return;
+    } catch (error) {
+      console.error('Error:', error);
+      document.getElementById('message').innerHTML = error;
+      return;
+    }
+  }
+</script>
+
+</html>

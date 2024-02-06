@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/style.css">
+  </link>
+  <title>Login</title>
+</head>
+
+<body>
+
+  <h2>Hotels</h2>
+  <div class="hotel-cards">
+    <% hotels.forEach(function(hotel) { %>
+    <a href="/admin/hotels/<%= hotel.id %>">
+      <div class="hotel-card">
+        <h3>
+          <%= hotel.name %>
+        </h3>
+      </div>
+    </a>
+    <% }); %>
+    <a href="/admin/hotels/create">
+      <div class="hotel-card">
+        <h3>
+          ADD
+        </h3>
+      </div>
+    </a>
+
+</body>
+
+</html>

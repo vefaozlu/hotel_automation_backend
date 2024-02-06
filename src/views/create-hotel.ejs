@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  </link>
+  <title>Login</title>
+</head>
+
+<body>
+
+  <form id="hotel-form" class="create-hotel">
+    <div id="message"></div>
+    <input type="text" name="name" placeholder="Hotel Name" />
+    <input type="text" name="address" placeholder="Hotel Address" />
+    <input type="submit" name="submit" />
+  </form>
+
+</body>
+
+<script>
+  const form = document.getElementById("hotel-form");
+  form.addEventListener('submit', async (e) => {
+    try {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const name = formData.get('name');
+      const address = formData.get('address');
+      const body = {
+        name: name,
+        address: address
+      };
+
+      const response = await fetch('/admin/hotels', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      })
+
+      const data = await response.json();
+
+      if (response.status !== 200) {
+        document.getElementById('message').innerHTML = data.message;
+        return;
+      }
+
+      alert("Hotel created successfully");
+      location.href = `/admin/roomtypes/create/${data.id}`;
+      return;
+    } catch (error) {
+      console.log("sdadsa")
+      console.error('Error:', error);
+      document.getElementById('message').innerHTML = error;
+      return;
+    }
+  });
+</script>
+
+</html>
+

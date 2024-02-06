@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/style.css">
+  </link>
+  <title>Login</title>
+</head>
+
+<body>
+  <form id="login-form" class="login-container">
+    <h1>Login</h1>
+    <div id="message" class="alert"></div>
+    <input type="text" name="name" placeholder="Name">
+    <input type="password" name="password" placeholder="Password">
+    <input type="submit" name="submit" value="Submit">
+    <a href="/auth/register">Don't have an account? Sign up.</a>
+  </form>
+</body>
+
+<script>
+  const form = document.getElementById("login-form");
+  form.addEventListener('submit', async (e) => {
+    try {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const name = formData.get('name');
+      const password = formData.get('password');
+      const body = {
+        username: name,
+        password: password
+      };
+
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      })
+
+      const data = await response.json();
+
+      if(response.status !== 200) {
+        document.getElementById('message').innerHTML = data.message;
+        return;
+      }
+
+      location.href = '/admin/hotels';
+      return;
+    } catch (error) {
+      console.log("sdadsa")
+      console.error('Error:', error);
+      document.getElementById('message').innerHTML = error;
+      return;
+    }
+  });
+</script>
+
+</html>

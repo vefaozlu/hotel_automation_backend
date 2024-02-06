@@ -1,20 +1,23 @@
 import bcrypt from "bcrypt";
 import passport from "passport";
 import LocalStrategy from "passport-local";
-import Auth from "../../sequelize/models/Auth.model.js";
+import User from "../../sequelize/models/User.model.js";
 
 const auth = passport;
 
+//  Authenticating user info
+
 auth.use(
-  new LocalStrategy({ usernameField: "email" }, async function verify(
-    email,
+  new LocalStrategy(async function verify(
+    username,
     password,
     cb
   ) {
     try {
-      const user = await Auth.findOne({
+      console.log("Authentications...");
+      const user = await User.findOne({
         where: {
-          email: email,
+          username: username,
         },
       });
 
@@ -28,12 +31,18 @@ auth.use(
         return cb({ message: "Incorrect credentials" });
       }
 
+      if(user.roleId === 2) {
+        
+      }
+
       return cb(null, user);
     } catch (e) {
       return cb({ message: "Incorrect credentials" + e });
     }
   })
 );
+
+//  Registering user info to session store
 
 auth.serializeUser(function (user, cb) {
   process.nextTick(function () {

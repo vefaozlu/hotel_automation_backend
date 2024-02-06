@@ -1,5 +1,6 @@
+import Reservation from "./Reservation.model.js";
 import { DataTypes } from "sequelize";
-import sequelize from "config.js";
+import sequelize from "../config.js";
 
 const Room = sequelize.define(
     "Room",
@@ -14,6 +15,7 @@ const Room = sequelize.define(
         },
         isVacant: {
             type: DataTypes.BOOLEAN,
+            defaultValue: true,
         },
         typeId: {
             type: DataTypes.INTEGER,
@@ -25,9 +27,16 @@ const Room = sequelize.define(
         },
         guestId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         }
+    },
+    {
+        timestamps: false,
     }
 );
+
+Room.hasMany(Reservation, {
+    foreignKey: "roomId"
+});
 
 export default Room;
